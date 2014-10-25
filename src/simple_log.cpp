@@ -16,7 +16,7 @@ char log_config_file[100] = "conf/simple_log.conf";
 const int load_cycle = 3;
 int last_load_sec = 0;
 time_t config_file_last_modify = 0;
-bool is_load_simple_log_config = false;
+bool is_load_config = false;
 const int max_single_log_size = 2048;
 char single_log[max_single_log_size];
 
@@ -68,24 +68,17 @@ std::map<std::string, std::string> _get_config_map() {
 		return result;
 	}
 
-	int config_line_size = 100;
-	int config_key_size = 10;
-	int config_value_size = config_line_size - config_key_size - 1; // =
-
 	while(fs.good()) {
-		char line[config_line_size];
-		memset(line, config_line_size, 0);
-		fs.getline(line, config_line_size);
+		std::string line;
+		std::getline(fs, line);
 
 		std::stringstream ss;
 		ss << line;
-		char key[config_key_size];
-		char value[config_value_size];
-		memset(key, 10, 0);
-		memset(value, config_value_size, 0);
-		ss.getline(key, config_key_size, '=');
-		ss.getline(value, config_value_size, '=');
-		result[std::string(key)] = std::string(value);
+		std::string key, value;
+		std::getline(ss, key, '=');
+		std::getline(ss, value, '=');
+
+		result[key] = value;
 	}
 	fs.close();
 	return result;
@@ -103,7 +96,7 @@ void _check_config_file() {
 
 	std::map<std::string, std::string> configs = _get_config_map();
 	if(!configs.empty()) {
-		is_load_simple_log_config = true;
+		is_load_config = true;
 		// read log level
 		std::string log_level_str = configs["log_level"];
 		log_level = _get_log_level(log_level_str.c_str());
@@ -114,7 +107,7 @@ void _check_config_file() {
 }
 
 void _log(const char *format, va_list ap) {
-	if(!is_load_simple_log_config) {
+	if(!is_load_config) {
 		vprintf(format, ap);
 		printf("\n");
 		return;
@@ -126,6 +119,34 @@ void _log(const char *format, va_list ap) {
 		fs << single_log << "\n";
 		fs.close();
 	}
+}
+
+void log_error(const char *format, ...) {
+	_check_config_file();
+	if(log_level < ERROR_LEVEL) {
+		return;
+	}
+
+	va_list ap;
+	va_start(ap, format);
+
+	_log(format, ap);
+
+	va_end(ap);
+}
+
+void log_warn(const char *format, ...) {
+	_check_config_file();
+	if(log_level < WARN_LEVEL) {
+		return;
+	}
+
+	va_list ap;
+	va_start(ap, format);
+
+	_log(format, ap);
+
+	va_end(ap);
 }
 
 void log_info(const char *format, ...) {
@@ -155,34 +176,3 @@ void log_debug(const char *format, ...) {
 
 	va_end(ap);
 }
-
-void log_warn(const char *format, ...) {
-	_check_config_file();
-	if(log_level < WARN_LEVEL) {
-		return;
-	}
-
-	va_list ap;
-	va_start(ap, format);
-
-	_log(format, ap);
-
-	va_end(ap);
-}
-
-void log_error(const char *format, ...) {
-	_check_config_file();
-
-	if(log_level < ERROR_LEVEL) {
-		return;
-	}
-
-	va_list ap;
-	va_start(ap, format);
-
-	_log(format, ap);
-
-	va_end(ap);
-}
-
-
