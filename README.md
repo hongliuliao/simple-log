@@ -20,6 +20,7 @@
 
 ## 配置文件(可选)
  * 默认会找conf/simple_log.conf,如果没有找到,会将日志以debug级别输出到控制台
+ * 如果配置了log_file,需要保证log目录已经存在
 ```
  log_level=INFO
  log_file=log/simple.log
