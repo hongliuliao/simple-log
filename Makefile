@@ -10,4 +10,5 @@ all:
 	
 test: src/simple_log.cpp test/simple_log_test.cpp
 	g++ -I bin/include test/simple_log_test.cpp bin/lib/libsimplelog.a -o bin/simple_log_test
-	bin/simple_log_test
+	mkdir -p log
+	./bin/simple_log_test
