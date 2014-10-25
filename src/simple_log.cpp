@@ -107,7 +107,7 @@ void _check_config_file() {
 }
 
 void _log(const char *format, va_list ap) {
-	if(!is_load_config) {
+	if(!is_load_config) { // if no config, send log to stdout
 		vprintf(format, ap);
 		printf("\n");
 		return;
