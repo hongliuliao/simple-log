@@ -37,7 +37,12 @@ int main() {
 }
 ```
 
-## 使用
+## 编译
 ```
  g++ -I bin/include test/simple_log_test.cpp bin/lib/libsimplelog.a -o bin/simple_log_test
+```
+
+## 输出
+```
+ 2014-10-25 15:43:29.216 INFO test/simple_log_test.cpp(5): this is a info log
 ```
