@@ -19,13 +19,19 @@ simple_log
   make && make test
 ```
 
+## 配置文件(可选)
+ * 默认会找conf/simple_log.conf,如果没有找到,会将日志以debug级别输出到控制台
+```
+ log_level=INFO
+ log_file=log/simple.log
+```
+
 ## 例子:
 ```c++
 
 #include "simple_log.h"
 
 int main() {
-  // 默认会找conf/simple_log.conf,如果没有找到,会将日志输出到控制台
   // init_log_config("conf/simple_log.conf"); 
   LOG_INFO("%s", "this is a info log");
   return 0;
