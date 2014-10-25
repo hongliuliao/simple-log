@@ -24,7 +24,7 @@ simple_log
 
 #include "simple_log.h"
 
-int main(int argc, char **argv) {
+int main() {
   // 默认会找conf/simple_log.conf,如果没有找到,会将日志输出到控制台
   // init_log_config("conf/simple_log.conf"); 
   LOG_INFO("%s", "this is a info log");
