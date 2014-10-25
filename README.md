@@ -31,3 +31,8 @@ int main(int argc, char **argv) {
   return 0;
 }
 ```
+
+## 使用
+```
+ g++ -I bin/include test/simple_log_test.cpp bin/lib/libsimplelog.a -o bin/simple_log_test
+```
