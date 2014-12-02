@@ -20,8 +20,6 @@ bool is_load_config = false;
 const int max_single_log_size = 2048;
 char single_log[max_single_log_size];
 
-// log config
-int log_level = DEBUG_LEVEL;
 std::string log_file;
 
 void init_log_config(char *config_file) {
