@@ -13,22 +13,22 @@ const int DEBUG_LEVEL = 4;
 static int log_level = DEBUG_LEVEL;
 
 #define LOG_ERROR(format, args...) \
-    if(log_level > ERROR_LEVEL) { \
+    if(log_level >= ERROR_LEVEL) { \
 		log_error("%s %s %s(%d): " format, _get_show_time().c_str(), "ERROR", __FILE__, __LINE__, ##args); \
     }
 
 #define LOG_WARN(format, args...) \
-    if(log_level > WARN_LEVEL) { \
+    if(log_level >= WARN_LEVEL) { \
 		log_warn("%s %s %s(%d): " format, _get_show_time().c_str(), "WARN", __FILE__, __LINE__, ##args); \
     }
 
 #define LOG_INFO(format, args...) \
-    if(log_level > INFO_LEVEL) { \
+    if(log_level >= INFO_LEVEL) { \
 		log_info("%s %s %s(%d): " format, _get_show_time().c_str(), "INFO", __FILE__, __LINE__, ##args); \
     }
 
 #define LOG_DEBUG(format, args...) \
-    if(log_level > DEBUG_LEVEL) { \
+    if(log_level >= DEBUG_LEVEL) { \
 		log_debug("%s %s %s(%d): " format, _get_show_time().c_str(), "DEBUG", __FILE__, __LINE__, ##args); \
     }
 
