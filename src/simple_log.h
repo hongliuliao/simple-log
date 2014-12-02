@@ -10,7 +10,7 @@ const int INFO_LEVEL = 3;
 const int DEBUG_LEVEL = 4;
 
 // log config
-static int log_level = DEBUG_LEVEL;
+extern int log_level;
 
 #define LOG_ERROR(format, args...) \
     if(log_level >= ERROR_LEVEL) { \
