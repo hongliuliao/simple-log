@@ -9,6 +9,7 @@
 #include <sys/time.h>
 #include "stdarg.h"
 
+#include "simple_config.h"
 #include "simple_log.h"
 
 // log context
@@ -59,28 +60,8 @@ int _get_log_level(const char *level_str) {
 	return DEBUG_LEVEL;
 }
 
-std::map<std::string, std::string> _get_config_map() {
-	std::map<std::string, std::string> result;
-
-	std::fstream fs(log_config_file);
-	if(!fs.is_open()) {
-		return result;
-	}
-
-	while(fs.good()) {
-		std::string line;
-		std::getline(fs, line);
-
-		std::stringstream ss;
-		ss << line;
-		std::string key, value;
-		std::getline(ss, key, '=');
-		std::getline(ss, value, '=');
-
-		result[key] = value;
-	}
-	fs.close();
-	return result;
+int _get_config_map(std::map<std::string, std::string> &configs) {
+	return get_config_map(log_config_file, configs);
 }
 
 void _check_config_file() {
@@ -93,7 +74,8 @@ void _check_config_file() {
 
 	last_load_sec = now;
 
-	std::map<std::string, std::string> configs = _get_config_map();
+	std::map<std::string, std::string> configs;
+	_get_config_map(configs);
 	if(!configs.empty()) {
 		is_load_config = true;
 		// read log level
