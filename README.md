@@ -32,7 +32,6 @@
 #include "simple_log.h"
 
 int main() {
-  // init_log_config("conf/simple_log.conf"); 
   LOG_INFO("%s", "this is a info log");
   return 0;
 }

@@ -17,16 +17,11 @@ char log_config_file[100] = "conf/simple_log.conf";
 const int load_cycle = 3;
 int last_load_sec = 0;
 time_t config_file_last_modify = 0;
-bool is_load_config = false;
 const int max_single_log_size = 2048;
 char single_log[max_single_log_size];
 
 int log_level = DEBUG_LEVEL;
 std::string log_file;
-
-void init_log_config(char *config_file) {
-	strcpy(log_config_file, config_file);
-}
 
 std::string _get_show_time() {
 	char show_time[40];
@@ -64,6 +59,10 @@ int _get_config_map(std::map<std::string, std::string> &configs) {
 	return get_config_map(log_config_file, configs);
 }
 
+void set_log_level(const char *level) {
+    log_level = _get_log_level(level);
+}
+
 void _check_config_file() {
 	// check config file
 	time_t now;
@@ -77,10 +76,9 @@ void _check_config_file() {
 	std::map<std::string, std::string> configs;
 	_get_config_map(configs);
 	if(!configs.empty()) {
-		is_load_config = true;
 		// read log level
 		std::string log_level_str = configs["log_level"];
-		log_level = _get_log_level(log_level_str.c_str());
+		set_log_level(log_level_str.c_str());
 
 		// read log file
 		log_file = configs["log_file"];
@@ -88,7 +86,7 @@ void _check_config_file() {
 }
 
 void _log(const char *format, va_list ap) {
-	if(!is_load_config) { // if no config, send log to stdout
+	if(log_file.empty()) { // if no config, send log to stdout
 		vprintf(format, ap);
 		printf("\n");
 		return;
