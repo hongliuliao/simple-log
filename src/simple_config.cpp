@@ -9,7 +9,7 @@
 #include "simple_config.h"
 
 int get_config_map(char *config_file, std::map<std::string, std::string> &configs) {
-    std::fstream fs(config_file);
+    std::ifstream fs(config_file);
     if(!fs.is_open()) {
         return -1;
     }

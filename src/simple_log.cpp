@@ -14,8 +14,8 @@
 
 // log context
 char log_config_file[100] = "conf/simple_log.conf";
-const int load_cycle = 3;
-int last_load_sec = 0;
+int load_cycle = 3;
+int run_time = 0;
 time_t config_file_last_modify = 0;
 const int max_single_log_size = 2048;
 char single_log[max_single_log_size];
@@ -40,16 +40,16 @@ std::string _get_show_time() {
 }
 
 int _get_log_level(const char *level_str) {
-	if(strcmp(level_str, "ERROR") == 0) {
+	if(strcasecmp(level_str, "ERROR") == 0) {
 		return ERROR_LEVEL;
 	}
-	if(strcmp(level_str, "WARN") == 0) {
+	if(strcasecmp(level_str, "WARN") == 0) {
 		return WARN_LEVEL;
 	}
-	if(strcmp(level_str, "INFO") == 0) {
+	if(strcasecmp(level_str, "INFO") == 0) {
 		return INFO_LEVEL;
 	}
-	if(strcmp(level_str, "DEBUG") == 0) {
+	if(strcasecmp(level_str, "DEBUG") == 0) {
 		return DEBUG_LEVEL;
 	}
 	return DEBUG_LEVEL;
@@ -65,13 +65,9 @@ void set_log_level(const char *level) {
 
 void _check_config_file() {
 	// check config file
-	time_t now;
-	time(&now);
-	if(now - last_load_sec < load_cycle) {
+	if(run_time++ % load_cycle != 0) {
 		return;
 	}
-
-	last_load_sec = now;
 
 	std::map<std::string, std::string> configs;
 	_get_config_map(configs);
@@ -82,6 +78,9 @@ void _check_config_file() {
 
 		// read log file
 		log_file = configs["log_file"];
+		if (!configs["load_cycle"].empty()) {
+		    load_cycle = atoi(configs["load_cycle"].c_str());
+		}
 	}
 }
 

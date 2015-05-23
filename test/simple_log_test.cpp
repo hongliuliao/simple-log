@@ -12,14 +12,15 @@
 int main(int argc, char **argv) {
 	// init_log_config("conf/simple_log.conf");
 
+    int run_num = 100000;
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
 
-	for(unsigned i=0;i<1000;i++) {
+	for (unsigned i = 0; i < run_num; i++) {
 		//LOG_ERROR("%s", "this is a ERROR log");
 		//LOG_WARN("%s", "this is a WARN log");
 		LOG_INFO("%s", "this is a info log");
-		//LOG_DEBUG("%s", "this is a DEBUG log");
+		LOG_DEBUG("%s", "this is a DEBUG log");
 		if(argc != 1) {
 			sleep(1);
 		}
@@ -27,6 +28,6 @@ int main(int argc, char **argv) {
 
 	gettimeofday(&end, NULL);
 	int cost_time = (end.tv_sec-start.tv_sec)*1000 + (end.tv_usec-start.tv_usec)/1000;
-	std::cout << "cost_time:" << cost_time << "ms" << std::endl;
+	LOG_INFO("RUN TIME:%d, cost_time:%d ms", run_num, cost_time);
 	return 0;
 }
