@@ -1,3 +1,5 @@
+.PHONY: all test clean
+
 all:
 	echo "make all"
 	mkdir -p bin/include
