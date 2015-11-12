@@ -35,7 +35,7 @@ int main() {
     int ret = log_init();
     if (ret != 0) {
     	printf("log_init error!\n");
-	return 1;
+        return 1;
     }
     LOG_INFO("%s", "this is a info log");
     return 0;
