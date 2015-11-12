@@ -18,7 +18,7 @@
   make && make test
 ```
 
-## 配置文件(可选)
+## 配置文件
  * 默认会找conf/simple_log.conf,如果没有找到,会将日志以debug级别输出到控制台
  * 如果配置了log_file,需要保证log目录已经存在
 ```
@@ -32,8 +32,13 @@
 #include "simple_log.h"
 
 int main() {
-  LOG_INFO("%s", "this is a info log");
-  return 0;
+    int ret = log_init();
+    if (ret != 0) {
+    	printf("log_init error!\n");
+	return 1;
+    }
+    LOG_INFO("%s", "this is a info log");
+    return 0;
 }
 ```
 
