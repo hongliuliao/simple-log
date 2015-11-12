@@ -11,17 +11,18 @@
 
 int main(int argc, char **argv) {
 	// init_log_config("conf/simple_log.conf");
+    log_init();
 
     int run_num = 100000;
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
 
 	for (unsigned i = 0; i < run_num; i++) {
-		//LOG_ERROR("%s", "this is a ERROR log");
-		//LOG_WARN("%s", "this is a WARN log");
+		LOG_ERROR("%s", "this is a ERROR log");
+		LOG_WARN("%s", "this is a WARN log");
 		LOG_INFO("%s", "this is a info log");
 		LOG_DEBUG("%s", "this is a DEBUG log");
-		if(argc != 1) {
+		if (argc != 1) {
 			sleep(1);
 		}
 	}

@@ -2,8 +2,9 @@
 .project
 .settings
 Debug
-bin
+output
 log
+tags
 
 # Compiled Object files
 *.slo
