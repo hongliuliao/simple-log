@@ -55,6 +55,7 @@ int FileAppender::write_log(char *log, const char *format, va_list ap) {
     if (_fs.is_open()) {
         vsprintf(single_log, format, ap);
         _fs << single_log << "\n";
+        _fs.flush();
     }
     return 0;
 }
