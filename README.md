@@ -7,7 +7,7 @@
 
 ## 功能列表
   * 支持动态加载配置文件,修改日志等级 (kill -USR1)
-  * 支持使用脚本进行日志文件的切分
+  * auto shift file log by daily
 
 ## 性能
   * 10万/s 日志写入
@@ -19,11 +19,11 @@
 ```
 
 ## 配置文件
- * 默认会找conf/simple_log.conf,如果没有找到,会将日志以debug级别输出到控制台
- * 如果配置了log_file,需要保证log目录已经存在
+ * 如果没有找到,会将日志以debug级别输出到控制台
 ```
  log_level=INFO
- log_file=log/simple.log
+ log_dir=log
+ log_file=simple.log
 ```
 
 ## 例子:
@@ -32,7 +32,7 @@
 #include "simple_log.h"
 
 int main() {
-    int ret = log_init();
+    int ret = log_init("conf", "simple_log.conf");
     if (ret != 0) {
     	printf("log_init error!\n");
         return 1;
@@ -42,9 +42,9 @@ int main() {
 }
 ```
 
-## 编译
+## build && test
 ```
- g++ -I bin/include test/simple_log_test.cpp bin/lib/libsimplelog.a -o bin/simple_log_test
+ make && make test && ./output/bin/simple_log_test
 ```
 
 ## 输出
