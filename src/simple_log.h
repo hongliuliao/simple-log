@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <string>
+#include <fstream>
 
 const int ERROR_LEVEL = 1;
 const int WARN_LEVEL = 2;
@@ -35,11 +36,28 @@ extern int log_level;
 
 std::string _get_show_time();
 
-int log_init();
+int log_init(std::string dir, std::string file);
 void log_error(const char *format, ...);
 void log_warn(const char *format, ...);
 void log_info(const char *format, ...);
 void log_debug(const char *format, ...);
 void set_log_level(const char *level);
+
+class FileAppender {
+    public:
+        FileAppender();
+        ~FileAppender();
+        int init(std::string dir, std::string file);
+        int write_log(char *log, const char *format, va_list ap);
+        int shift_file_if_need();
+        bool is_inited();
+    private:
+        std::fstream _fs;
+        std::string _log_file;
+        std::string _log_dir;
+        std::string _log_file_path;
+        struct tm _last_tm;
+        bool _is_inited;
+};
 
 #endif
