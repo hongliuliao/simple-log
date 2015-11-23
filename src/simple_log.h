@@ -48,9 +48,11 @@ class FileAppender {
         FileAppender();
         ~FileAppender();
         int init(std::string dir, std::string file);
+        bool is_inited();
         int write_log(char *log, const char *format, va_list ap);
         int shift_file_if_need(timeval tv);
-        bool is_inited();
+        int delete_old_log(timeval tv);
+        void set_retain_day(int rd);
     private:
         std::fstream _fs;
         std::string _log_file;
@@ -58,6 +60,7 @@ class FileAppender {
         std::string _log_file_path;
         struct tm _last_tm;
         bool _is_inited;
+        int _retain_day;
 };
 
 #endif

@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 	// init_log_config("conf/simple_log.conf");
     log_init("conf", "simple_log.conf");
 
-    int run_num = 100000;
+    unsigned run_num = 100000;
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
 

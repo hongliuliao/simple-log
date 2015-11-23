@@ -26,12 +26,15 @@ FileAppender g_file_appender;
 
 FileAppender::FileAppender() {
     _is_inited = false;
+    _retain_day = -1;
 }
+
 FileAppender::~FileAppender() {
     if (_fs.is_open()) {
         _fs.close();
     }
 }
+
 int FileAppender::init(std::string dir, std::string log_file) {
     bzero(&_last_tm, sizeof(_last_tm));
     if (!dir.empty()) {
@@ -62,16 +65,13 @@ int FileAppender::write_log(char *log, const char *format, va_list ap) {
 }
 
 int FileAppender::shift_file_if_need(timeval tv) {
+    struct tm *tm;
+    tm = localtime(&tv.tv_sec);
     if (_last_tm.tm_year == 0) {
-
-        struct tm *tm;
-        tm = localtime(&tv.tv_sec);
         _last_tm = *tm;
         return 0;
     }
 
-    struct tm *tm;
-    tm = localtime(&tv.tv_sec);
     if (_last_tm.tm_year != tm->tm_year ||
             _last_tm.tm_mon != tm->tm_mon ||
             _last_tm.tm_mday != tm->tm_mday) {
@@ -92,6 +92,27 @@ bool FileAppender::is_inited() {
     return _is_inited;
 }
 
+void FileAppender::set_retain_day(int rd) {
+    _retain_day = rd;
+}
+
+int FileAppender::delete_old_log(timeval tv) {
+    if (_retain_day <= 0) {
+        return 0;
+    }
+    struct timeval old_tv;
+    old_tv.tv_sec = tv.tv_sec - _retain_day * 3600 * 24;
+    old_tv.tv_usec = tv.tv_usec;
+    char old_file[100];
+    memset(old_file, 0, 100);
+    struct tm *tm;
+    tm = localtime(&old_tv.tv_sec);
+    sprintf(old_file, "%s.%04d-%02d-%02d",
+            _log_file.c_str(), tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday);
+    std::string old_file_path = _log_dir + "/" + old_file;
+    return remove(old_file_path.c_str());
+}
+
 int _check_config_file() {
 	std::map<std::string, std::string> configs;
     std::string log_config_file = g_dir + "/" + g_config_file;
@@ -102,7 +123,11 @@ int _check_config_file() {
     // read log level
     std::string log_level_str = configs["log_level"];
     set_log_level(log_level_str.c_str());
-
+    
+    std::string rd = configs["retain_day"];
+    if (!rd.empty()) {
+        g_file_appender.set_retain_day(atoi(rd.c_str()));
+    }
     // read log file
     std::string dir = configs["log_dir"];
     std::string log_file = configs["log_file"];
@@ -165,6 +190,7 @@ void _log(const char *format, va_list ap) {
     std::string fin_format = _get_show_time(now) + " " + format;
     
     g_file_appender.shift_file_if_need(now);
+    g_file_appender.delete_old_log(now);
     g_file_appender.write_log(single_log, fin_format.c_str(), ap);
 }
 
