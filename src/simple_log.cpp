@@ -69,8 +69,8 @@ int FileAppender::shift_file_if_need(struct timeval tv, struct timezone tz) {
         _last_sec = tv.tv_sec;
         return 0;
     }
-    long fix_now_sec = tv.tv_sec - tz.tz_minuteswest;
-    long fix_last_sec = _last_sec - tz.tz_minuteswest;
+    long fix_now_sec = tv.tv_sec - tz.tz_minuteswest * 60;
+    long fix_last_sec = _last_sec - tz.tz_minuteswest * 60;
     if (fix_now_sec / ONE_DAY_SECONDS - fix_last_sec / ONE_DAY_SECONDS) {
         _fs.close();    
         
@@ -79,7 +79,8 @@ int FileAppender::shift_file_if_need(struct timeval tv, struct timezone tz) {
         char new_file[100];
         memset(new_file, 0, 100);
         sprintf(new_file, "%s.%04d-%02d-%02d",
-                _log_file.c_str(), tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday);
+                _log_file.c_str(), 
+                tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday - 1/*last day*/);
         std::string new_file_path = _log_dir + "/" + new_file;
         rename(_log_file_path.c_str(), new_file_path.c_str());
         
@@ -112,7 +113,7 @@ int FileAppender::delete_old_log(timeval tv) {
     struct tm *tm;
     tm = localtime(&old_tv.tv_sec);
     sprintf(old_file, "%s.%04d-%02d-%02d",
-            _log_file.c_str(), tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday);
+            _log_file.c_str(), tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday - 1);
     std::string old_file_path = _log_dir + "/" + old_file;
     return remove(old_file_path.c_str());
 }
