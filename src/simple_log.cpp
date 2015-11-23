@@ -38,6 +38,7 @@ int FileAppender::init(std::string dir, std::string log_file) {
         int ret = mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if (ret != 0 && errno != EEXIST) {
             printf("mkdir error which dir:%s err:%s\n", dir.c_str(), strerror(errno));
+            _is_inited = true;
             return -1;
         }
     } else {
@@ -105,13 +106,14 @@ int _check_config_file() {
     // read log file
     std::string dir = configs["log_dir"];
     std::string log_file = configs["log_file"];
+    int ret = 0;
     if (!log_file.empty()) {
         use_file_appender = true;
         if (!g_file_appender.is_inited()) {
-            g_file_appender.init(dir, log_file);
+            ret = g_file_appender.init(dir, log_file);
         }
     }
-    return 0;
+    return ret;
 }
 
 void sigreload(int sig) {
