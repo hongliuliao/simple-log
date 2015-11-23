@@ -60,18 +60,14 @@ int FileAppender::write_log(char *log, const char *format, va_list ap) {
     return 0;
 }
 
-int FileAppender::shift_file_if_need() {
+int FileAppender::shift_file_if_need(timeval tv) {
     if (_last_tm.tm_year == 0) {
-        struct timeval tv;
-        gettimeofday(&tv, NULL);
 
         struct tm *tm;
         tm = localtime(&tv.tv_sec);
         _last_tm = *tm;
         return 0;
     }
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
 
     struct tm *tm;
     tm = localtime(&tv.tv_sec);
@@ -123,12 +119,9 @@ void sigreload(int sig) {
     _check_config_file();
 }
 
-std::string _get_show_time() {
+std::string _get_show_time(timeval tv) {
 	char show_time[40];
 	memset(show_time, 0, 40);
-
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
 
 	struct tm *tm;
 	tm = localtime(&tv.tv_sec);
@@ -165,8 +158,12 @@ void _log(const char *format, va_list ap) {
 		printf("\n");
 		return;
 	}
-    g_file_appender.shift_file_if_need();
-    g_file_appender.write_log(single_log, format, ap);
+    struct timeval now;
+    gettimeofday(&now, NULL);
+    std::string fin_format = _get_show_time(now) + " " + format;
+    
+    g_file_appender.shift_file_if_need(now);
+    g_file_appender.write_log(single_log, fin_format.c_str(), ap);
 }
 
 int log_init(std::string dir, std::string file) {

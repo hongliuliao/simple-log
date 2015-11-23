@@ -15,22 +15,22 @@ extern int log_level;
 
 #define LOG_ERROR(format, args...) \
     if(log_level >= ERROR_LEVEL) { \
-		log_error("%s %s %s(%d): " format, _get_show_time().c_str(), "ERROR", __FILE__, __LINE__, ##args); \
+		log_error("%s %s(%d): " format, "ERROR", __FILE__, __LINE__, ##args); \
     }
 
 #define LOG_WARN(format, args...) \
     if(log_level >= WARN_LEVEL) { \
-		log_warn("%s %s %s(%d): " format, _get_show_time().c_str(), "WARN", __FILE__, __LINE__, ##args); \
+		log_warn("%s %s(%d): " format, "WARN", __FILE__, __LINE__, ##args); \
     }
 
 #define LOG_INFO(format, args...) \
     if(log_level >= INFO_LEVEL) { \
-		log_info("%s %s %s(%d): " format, _get_show_time().c_str(), "INFO", __FILE__, __LINE__, ##args); \
+		log_info("%s %s(%d): " format, "INFO", __FILE__, __LINE__, ##args); \
     }
 
 #define LOG_DEBUG(format, args...) \
     if(log_level >= DEBUG_LEVEL) { \
-		log_debug("%s %s %s(%d): " format, _get_show_time().c_str(), "DEBUG", __FILE__, __LINE__, ##args); \
+		log_debug("%s %s(%d): " format, "DEBUG", __FILE__, __LINE__, ##args); \
     }
 
 
@@ -49,7 +49,7 @@ class FileAppender {
         ~FileAppender();
         int init(std::string dir, std::string file);
         int write_log(char *log, const char *format, va_list ap);
-        int shift_file_if_need();
+        int shift_file_if_need(timeval tv);
         bool is_inited();
     private:
         std::fstream _fs;
