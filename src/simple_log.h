@@ -4,6 +4,7 @@
 #include <cstring>
 #include <string>
 #include <fstream>
+#include "sys/time.h"
 
 const int ERROR_LEVEL = 1;
 const int WARN_LEVEL = 2;
@@ -50,7 +51,7 @@ class FileAppender {
         int init(std::string dir, std::string file);
         bool is_inited();
         int write_log(char *log, const char *format, va_list ap);
-        int shift_file_if_need(timeval tv);
+        int shift_file_if_need(struct timeval tv, struct timezone tz);
         int delete_old_log(timeval tv);
         void set_retain_day(int rd);
     private:
@@ -58,7 +59,7 @@ class FileAppender {
         std::string _log_file;
         std::string _log_dir;
         std::string _log_file_path;
-        struct tm _last_tm;
+        long _last_sec;
         bool _is_inited;
         int _retain_day;
 };
