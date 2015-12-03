@@ -7,7 +7,8 @@
 
 ## 功能列表
   * 支持动态加载配置文件,修改日志等级 (kill -USR1)
-  * auto shift file log by daily
+  * Auto shift file log by daily
+  * Auto delete old log file if you need
 
 ## 性能
   * 10万/s 日志写入
@@ -18,6 +19,7 @@
  log_level=INFO
  log_dir=log
  log_file=simple.log
+ retain_day=7
 ```
 
 ## 例子:
