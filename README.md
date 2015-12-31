@@ -2,11 +2,10 @@
 ## 特点
 
   * 简洁但是功能实用
-  * 只支持linux
-  * 线程不安全
+  * 线程安全
 
 ## 功能列表
-  * 支持动态加载配置文件,修改日志等级 (kill -USR1)
+  * 支持动态加载配置文件,修改日志等级 (kill -USR1 <pid>)
   * Auto shift file log by daily
   * Auto delete old log file if you need
 
