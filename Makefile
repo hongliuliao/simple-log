@@ -2,6 +2,8 @@
 
 CXX := g++
 CXXFLAG := -g -Wall 
+LDFLAGS := -lpthread
+
 all:
 	echo "make all"
 	mkdir -p output/include
@@ -16,5 +18,5 @@ all:
 	mv libsimplelog.a output/lib/
 	
 test: src/simple_log.cpp test/simple_log_test.cpp
-	$(CXX) $(CXXFLAG)-I output/include test/simple_log_test.cpp output/lib/libsimplelog.a -o output/bin/simple_log_test
+	$(CXX) $(CXXFLAG) $(LDFLAGS) -I output/include test/simple_log_test.cpp output/lib/libsimplelog.a -o output/bin/simple_log_test
 	mkdir -p log
